@@ -1,5 +1,5 @@
 # http
-A small simplification of the standard library net/http library in Go.
+A small simplification of the standard library net/http in Go.
 
 ## Usage
 
