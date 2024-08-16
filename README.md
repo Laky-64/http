@@ -31,6 +31,20 @@ fmt.Println(res)
 ```
 <img src="https://vhs.charm.sh/vhs-1Qsv8thjvA9KpxkDvyvB4.gif" alt="Example of a simple request">
 
+### Proxy Request
+```go
+res, err := http.ExecuteRequest(
+    "https://ipinfo.io",
+    http.Proxy("socks5://127.0.0.1:9050"),
+)
+if err != nil {
+    panic(err)
+}
+fmt.Println(res)
+```
+
+<img src="https://vhs.charm.sh/vhs-3pKCGpyLBcCyrOmyMknL0l.gif" alt="Example of a proxy request">
+
 ### POST Request
 
 ```go
