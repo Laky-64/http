@@ -2,7 +2,6 @@ package http
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"github.com/Laky-64/http/types"
 	"io"
@@ -48,6 +47,9 @@ func ExecuteRequest(url string, options ...RequestOption) (*types.HTTPResult, er
 	} else if opt.Body != nil {
 		body = bytes.NewBuffer(opt.Body)
 	}
+	if !requestLacksBody(opt.Method) && body != nil && opt.OverloadReader != nil {
+		body = opt.OverloadReader(body)
+	}
 	req, err := http.NewRequest(opt.Method, url, body)
 	if err != nil {
 		return nil, err
@@ -77,10 +79,11 @@ func ExecuteRequest(url string, options ...RequestOption) (*types.HTTPResult, er
 		return nil, err
 	}
 	var buf bytes.Buffer
-	if opt.OverloadReader != nil {
-		proxyBody = opt.OverloadReader(proxyBody)
+	var resultBody io.Reader = do.Body
+	if requestLacksBody(opt.Method) && opt.OverloadReader != nil {
+		resultBody = opt.OverloadReader(resultBody)
 	}
-	_, err = io.Copy(&buf, proxyBody)
+	_, err = io.Copy(&buf, resultBody)
 	if err != nil {
 		return nil, err
 	}
