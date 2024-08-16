@@ -7,10 +7,11 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
+	"net/url"
 	"time"
 )
 
-func ExecuteRequest(url string, options ...RequestOption) (*types.HTTPResult, error) {
+func ExecuteRequest(uri string, options ...RequestOption) (*types.HTTPResult, error) {
 	var opt types.RequestOptions
 	for _, option := range options {
 		option.Apply(&opt)
@@ -21,8 +22,20 @@ func ExecuteRequest(url string, options ...RequestOption) (*types.HTTPResult, er
 	if opt.Method == "" {
 		opt.Method = "GET"
 	}
+
+	transport := http.DefaultTransport
+	if len(opt.Proxy) > 0 {
+		proxyUrl, err := url.ParseRequestURI(opt.Proxy)
+		if err != nil {
+			return nil, err
+		}
+		transport = &http.Transport{
+			Proxy: http.ProxyURL(proxyUrl),
+		}
+	}
 	client := http.Client{
-		Timeout: opt.Timeout,
+		Timeout:   opt.Timeout,
+		Transport: transport,
 	}
 	var body io.Reader
 	var multiPartWriter *multipart.Writer
@@ -50,7 +63,7 @@ func ExecuteRequest(url string, options ...RequestOption) (*types.HTTPResult, er
 	if !requestLacksBody(opt.Method) && body != nil && opt.OverloadReader != nil {
 		body = opt.OverloadReader(body)
 	}
-	req, err := http.NewRequest(opt.Method, url, body)
+	req, err := http.NewRequest(opt.Method, uri, body)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +108,7 @@ func ExecuteRequest(url string, options ...RequestOption) (*types.HTTPResult, er
 		opt.Retries--
 		if opt.Retries > 0 {
 			time.Sleep(time.Millisecond * 250)
-			return ExecuteRequest(url, options...)
+			return ExecuteRequest(uri, options...)
 		}
 		errRequest = fmt.Errorf("http status code %d", do.StatusCode)
 	}

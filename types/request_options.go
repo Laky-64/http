@@ -15,4 +15,5 @@ type RequestOptions struct {
 	Cookies        map[string]string
 	MultiPart      *MultiPartInfo
 	OverloadReader func(r io.Reader) io.Reader
+	Proxy          string
 }
