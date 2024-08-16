@@ -76,23 +76,13 @@ func ExecuteRequest(url string, options ...RequestOption) (*types.HTTPResult, er
 	if err != nil {
 		return nil, err
 	}
-	var proxyBody io.Reader = do.Body
+	var buf bytes.Buffer
 	if opt.OverloadReader != nil {
 		proxyBody = opt.OverloadReader(proxyBody)
 	}
-	var buf []byte
-	for {
-		var b = make([]byte, 1024*4)
-		n, fErr := io.ReadFull(proxyBody, b)
-		buf = append(buf, b[:n]...)
-		if fErr != nil {
-			if fErr == io.EOF {
-				break
-			}
-			if !errors.Is(fErr, io.ErrUnexpectedEOF) {
-				return nil, fErr
-			}
-		}
+	_, err = io.Copy(&buf, proxyBody)
+	if err != nil {
+		return nil, err
 	}
 	defer func(Body io.ReadCloser) {
 		_ = Body.Close()
@@ -107,7 +97,7 @@ func ExecuteRequest(url string, options ...RequestOption) (*types.HTTPResult, er
 		errRequest = fmt.Errorf("http status code %d", do.StatusCode)
 	}
 	return &types.HTTPResult{
-		Body:       buf,
+		Body:       buf.Bytes(),
 		StatusCode: do.StatusCode,
 	}, errRequest
 }
