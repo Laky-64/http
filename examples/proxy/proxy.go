@@ -7,7 +7,7 @@ import (
 
 func main() {
 	res, err := http.ExecuteRequest(
-		"https://httpbin.org/get",
+		"https://ipinfo.io",
 		http.Proxy("socks5://127.0.0.1:9050"),
 	)
 	if err != nil {
