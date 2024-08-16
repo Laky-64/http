@@ -2,7 +2,7 @@ Output proxy.gif
 
 Set FontSize 24
 Set Width 1200
-Set Height 750
+Set Height 570
 
 Type "./proxy" Enter
 
