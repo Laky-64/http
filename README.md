@@ -22,7 +22,7 @@ Here's an example of a simple request:
 ### Simple Request
 ```go
 res, err := http.ExecuteRequest(
-	"https://httpbin.org/get",
+    "https://httpbin.org/get",
 )
 if err != nil {
     panic(err)
@@ -35,9 +35,9 @@ fmt.Println(res)
 
 ```go
 res, err := http.ExecuteRequest(
-	"https://httpbin.org/post",
-	http.Method("POST"),
-	http.Body([]byte("Hello, World!")),
+    "https://httpbin.org/post",
+    http.Method("POST"),
+    http.Body([]byte("Hello, World!")),
 )
 if err != nil {
     panic(err)
@@ -50,18 +50,18 @@ fmt.Println(res)
  ```go
 res, err := http.ExecuteRequest(
 	"https://httpbin.org/post", 
-	http.Method("POST"), 
-	http.MultiPartForm(
-		map[string]string{
-			"key": "value",
-		}, 
-		map[string]types.FileDescriptor{
-			"file": {
-				FileName: "file.txt", 
-				Content:  []byte("Hello, World!"),
-			},
-		},
-	),
+    http.Method("POST"), 
+    http.MultiPartForm(
+        map[string]string{
+            "key": "value",
+        }, 
+        map[string]types.FileDescriptor{
+            "file": {
+                FileName: "file.txt", 
+                Content:  []byte("Hello, World!"),
+            },
+        },
+    ),
 )
 if err != nil {
     panic(err)
