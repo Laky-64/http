@@ -114,6 +114,8 @@ func ExecuteRequest(uri string, options ...RequestOption) (*types.HTTPResult, er
 	}
 	return &types.HTTPResult{
 		Body:       buf.Bytes(),
+		Headers:    do.Header,
+		Cookies:    do.Cookies(),
 		StatusCode: do.StatusCode,
 	}, errRequest
 }
