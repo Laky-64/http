@@ -24,7 +24,11 @@ func ExecuteRequest(uri string, options ...RequestOption) (*types.HTTPResult, er
 	}
 
 	transport := http.DefaultTransport
-	if len(opt.Proxy) > 0 {
+	if len(opt.Proxy) > 0 && opt.Transport != nil {
+		return nil, fmt.Errorf("can't use both proxy and transport at the same time")
+	} else if opt.Transport != nil {
+		transport = opt.Transport
+	} else if len(opt.Proxy) > 0 {
 		proxyUrl, err := url.ParseRequestURI(opt.Proxy)
 		if err != nil {
 			return nil, err

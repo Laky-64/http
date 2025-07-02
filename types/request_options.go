@@ -2,6 +2,7 @@ package types
 
 import (
 	"io"
+	"net/http"
 	"time"
 )
 
@@ -16,4 +17,5 @@ type RequestOptions struct {
 	MultiPart      *MultiPartInfo
 	OverloadReader func(r io.Reader) io.Reader
 	Proxy          string
+	Transport      *http.Transport
 }
