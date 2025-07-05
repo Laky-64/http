@@ -38,8 +38,9 @@ func ExecuteRequest(uri string, options ...RequestOption) (*types.HTTPResult, er
 		}
 	}
 	client := http.Client{
-		Timeout:   opt.Timeout,
-		Transport: transport,
+		Timeout:       opt.Timeout,
+		Transport:     transport,
+		CheckRedirect: opt.HandleRedirect,
 	}
 	var body io.Reader
 	var multiPartWriter *multipart.Writer
