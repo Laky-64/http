@@ -19,5 +19,5 @@ type RequestOptions struct {
 	MultiPart      *MultiPartInfo
 	OverloadReader func(r io.Reader) io.Reader
 	Proxy          string
-	Transport      *http.Transport
+	Transport      http.RoundTripper
 }
