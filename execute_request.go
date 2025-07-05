@@ -41,6 +41,7 @@ func ExecuteRequest(uri string, options ...RequestOption) (*types.HTTPResult, er
 		Timeout:       opt.Timeout,
 		Transport:     transport,
 		CheckRedirect: opt.HandleRedirect,
+		Jar:           opt.CookieJar,
 	}
 	var body io.Reader
 	var multiPartWriter *multipart.Writer

@@ -15,6 +15,7 @@ type RequestOptions struct {
 	Headers        map[string]string
 	HandleRedirect func(req *http.Request, via []*http.Request) error
 	Cookies        map[string]string
+	CookieJar      http.CookieJar
 	MultiPart      *MultiPartInfo
 	OverloadReader func(r io.Reader) io.Reader
 	Proxy          string
